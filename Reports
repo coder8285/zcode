@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<meta http-equiv="refresh" content="60" >
+<meta http-equiv="X-UA-Compatible" content="IE8">
+ <!-- jquery -->
+<script src="<?php echo base_url();?>js/jquery/jquery-1.8.2.min.js" type="text/javascript"></script>
+
+<!--    jquery-ui -->
+<script src="<?php echo base_url();?>js/jquery/ui/dialog/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
+<script src="<?php echo base_url();?>js/jquery/ui/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="<?php echo base_url();?>css/jquery/ui/jquery-ui-1.8.23.custom.css" type="text/css" media="screen" />
+ <script type='text/javascript'>
+ var hotel_id="<?php echo $hotel->hotel_id;?>";
+ var base_url="<?php echo base_url();?>";
+ </script>
+
+<!--    javascript    -->
+<script src="<?php echo base_url();?>js/common.js" type="text/javascript"></script>
+<script src="<?php echo base_url();?>js/menu.js" type="text/javascript"></script>
+<script src="<?php echo base_url();?>js/reports.js" type="text/javascript"></script>
+
+<!--    common css    -->
+<link rel="stylesheet" href="<?php echo base_url();?>css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url();?>css/common.css" type="text/css" media="screen" />
+
+<!--  ui-icons   -->
+<link rel="stylesheet" href="<?php echo base_url();?>css/jquery/ui/ui-icons.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo base_url();?>js/jquery/ui/1.9/css/smoothness/jquery-ui-1.9.0.custom.css" type="text/css" media="screen" />
+
+<!--  custom css  -->
+<link rel="stylesheet" href="<?php echo base_url();?>css/reports.css" type="text/css" media="screen" />
+
+<!-- Top of page   -->
+<title>Reports</title>
+</head>
+<body >
+
+<div class="main">
+    <div class="ful-nav logo-nav">
+	    <div class="wrapper">
+        	  <div class="container">
+
+	<?php
+    $logoutMenu=array();
+    $logoutMenu[]=array('id'=>'linkToKds','href'=>base_url()."kds",'name'=>"KDS" ,'target'=>'_blank');
+    $logoutMenu[]=array('id'=>'linkToOldBills','href'=>base_url()."ordering_system/bills/".$hotel->hotel_id,'name'=>"Old Bills",'target'=>'_blank');
+    $logoutMenu[]=array('id'=>'changePassword','name'=>"Change Password");
+    $logoutMenu[]=array('id'=>'linkToOrderingSystem','href'=>base_url(),'name'=>"Ordering system" ,'target'=>'_blank');
+    $logoutMenu[]=array('id'=>'logout','href'=>base_url()."auth/logout",'name'=>"Logout");
+
+    $headerData=array(
+        'title'=>"Reports",
+        'logoPath'=>base_url()."uploads/hotels/".$hotel->hotel_id."/hotel_logos/".$hotel->logo.$hotel->logo_ext,
+        'subTitle'=>$hotel->name
+    );
+	
+	$userID=$this->session->userdata('user_id');
+   if($userID!=1)
+   $headerData['logoutMenu']=$logoutMenu;
+   $this->load->view('common/header',$headerData);
+
+echo "<script>
+$(document).ready(function(){
+ 
+  
+// Pdf function on click
+  $('.action-btns1').click(function(){
+$.post(base_url+'ordering_system/reportpdf',function(){
+    alert('Good: ');
+  });
+  });
+  txt=$hotel->hotel_id;
+  
+  // Daily count Auto refresh number
+  $.post(base_url+'reports_page/get_dailysales',
+             { day1: txt }, function(data) {
+				   $('.day').text(data);
+				  });
+   
+   // Monthly count Auto refresh number
+  $.post(base_url+'reports_page/get_monthlysales',
+             { month: txt }, function(data) {
+				   $('.months').text(data);
+});
+ // Monthly count Auto refresh number
+  $.post(base_url+'reports_page/get_prevmonthlysales',
+             { month: txt }, function(data) {
+				   $('.Prevmonths').text(data);
+
+});
+ // Monthly count Auto refresh number
+  $.post(base_url+'reports_page/get_prevdaysales',
+             { day1: txt }, function(data) {
+				   $('.prevday').text(data);
+
+});
+ // Monthly count Auto refresh number
+  $.post(base_url+'reports_page/get_presweeksales',
+             { month: txt }, function(data) {
+				   $('.presweek').text(data);
+
+});
+ // Monthly count Auto refresh number
+  $.post(base_url+'reports_page/get_lastweeksales',
+             { month: txt }, function(data) {
+				   $('.lastweek').text(data);
+
+});
+ // Monthly count Auto refresh number
+  $.post(base_url+'reports_page/get_weeklysales',
+             { month: txt }, function(data) {
+				   $('.weekly').text(data);
+
+});
+ // Monthly count Auto refresh number
+  $.post(base_url+'reports_page/get_monthssales',
+             { month: txt }, function(data) {
+				   $('.monthly').text(data);
+});
+// Daily count for last 3 months Auto refresh number
+  $.post(base_url+'reports_page/get_dailysalestrends',
+             { month: txt }, function(data) {
+				   $('.dailytrends').text(data);
+
+});
+// Daily count for last 3 months Auto refresh number
+  $.post(base_url+'reports_page/get_itemwisesales',
+             { month: txt }, function(data) {
+				   $('.itemyest').text(data);
+
+});
+// Daily count for last 3 months Auto refresh number
+  $.post(base_url+'reports_page/get_itemwisesalesmnth',
+             { month: txt }, function(data) {
+				   $('.itemmnth').text(data);
+
+});
+// Daily count for last 3 months Auto refresh number
+  $.post(base_url+'reports_page/get_itemwisesalesweek',
+             { month: txt }, function(data) {
+				   $('.itemweek').text(data);
+
+});
+// Daily count for last 3 months Auto refresh number
+  $.post(base_url+'reports_page/get_sbyest',
+             { month: txt }, function(data) {
+				   $('.sbyest').text(data);
+
+});
+// Daily count for last 3 months Auto refresh number
+  $.post(base_url+'reports_page/get_sbmnth',
+             { month: txt }, function(data) {
+				   $('.sbmnth').text(data);
+
+});
+// Daily count for last 3 months Auto refresh number
+  $.post(base_url+'reports_page/get_sbweek',
+             { month: txt }, function(data) {
+				   $('.sbweek').text(data);
+
+});
+
+// Daily count for last 3 months Auto refresh number
+  $.post(base_url+'reports_page/get_salestable',
+             { month: txt }, function(data) {
+				   $('.salestable').text(data);
+
+});
+Date.prototype.monthNames = [
+    'January', 'February', 'March',
+    'April', 'May', 'June',
+    'July', 'August', 'September',
+    'October', 'November', 'December'
+];
+//Present month
+Date.prototype.getMonthName = function() {
+    return this.monthNames[this.getMonth()];
+};
+Date.prototype.getShortMonthName = function () {
+    return this.getMonthName().substr(0, 3);
+};
+var d = new Date();
+//alert(d.getShortMonthName());
+var mon=d.getShortMonthName();
+$('#curmonth').text(mon);
+
+//Previous month
+Date.prototype.getPreviousMonthName = function() {
+    return this.monthNames[this.getMonth()-1];
+};
+Date.prototype.getShortMonthName = function () {
+    return this.getPreviousMonthName().substr(0, 3);
+};
+var o = new Date();
+var mon=o.getShortMonthName();
+$('#prevmonth').text(mon);
+
+    showTab(location.hash || '1');
+    function showTab(hash) {
+		if(hash != 1)
+		{
+              $('div.multi-select').hide();
+              $(hash).show();
+		}
+        
+    }
+
+
+});
+
+</script>";
+          ?>
+
+		  </div>
+		  </div>
+    </div>
+     <!-- End of Top Logo	-->
+    	<script type="text/javascript">
+
+function togglediv1()
+{
+document.getElementById("tab2").style.display="none";
+document.getElementById("tab3").style.display="none"
+   if(document.getElementById("tab1").style.display == "none")
+          document.getElementById("tab1").style.display="";
+   
+
+}
+function togglediv2()
+{
+document.getElementById("tab1").style.display="none";
+document.getElementById("tab3").style.display="none";
+if(document.getElementById("tab2").style.display == "none")
+          document.getElementById("tab2").style.display="";
+
+   
+}
+function togglediv3()
+{
+document.getElementById("tab1").style.display="none";
+document.getElementById("tab2").style.display="none";
+if(document.getElementById("tab3").style.display == "none")
+          document.getElementById("tab3").style.display="";
+
+   
+}
+
+
+
+
+//print function
+function printExternal() {
+var uri= base_url + 'reports_page/dailysales/' + hotel_id;window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+	if(printWindow.addEventListener)
+	{
+		//alert(printWindow);
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+	}
+	else if(printWindow.attachEvent)
+	{ 
+		//alert(printWindow);
+		printWindow.attachEvent('load', function(){
+			printWindow.document.close();
+	    printwindow.focus();
+        printwindow.print();
+        printWindow.close();
+    });
+	}
+}
+function printMonth() {
+var uri= base_url + 'reports_page/Monthlysales/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printpreviousMonth() {
+var uri= base_url + 'reports_page/Previousmonth/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printpresentweek() {
+var uri= base_url + 'reports_page/Presentweek/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printpreviousday() {
+var uri= base_url + 'reports_page/Previousday/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+		setTimeout('printWindow.print()', 1000);
+		setTimeout('printWindow.close()', 1000);
+        printWindow.close();
+    }, true);
+}
+function printlastweek() {
+var uri= base_url + 'reports_page/Lastweek/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+
+function printMonthlySalesTrends() {
+var uri= base_url + 'reports_page/salestrendsMonthly/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printDailySalesTab() {
+var uri= base_url + 'reports_page/salesByTable/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printDailySalesTrends() {
+var uri= base_url + 'reports_page/salesTrendsDaily/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printWeeklySalesTrends() {
+var uri= base_url + 'reports_page/salesTrendsWeekly/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printItemwiseSalesYest() {
+var uri= base_url + 'reports_page/itemwiseSalesYest/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printItemwiseSalesMnth() {
+var uri= base_url + 'reports_page/itemwiseSalesMnth/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printItemwiseSalesWeek() {
+var uri= base_url + 'reports_page/itemwiseSalesWeek/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printSubcategoryYest() {
+var uri= base_url + 'reports_page/subcategSalesYest/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printSubcategoryMnth() {
+var uri= base_url + 'reports_page/subcategSalesMnth/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+function printSubcategoryWeek() {
+var uri= base_url + 'reports_page/subcategSalesWeek/' + hotel_id + "";window.href=uri;
+    var printWindow = window.open(href,  ' ', 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+		printWindow.addEventListener('load', function(){
+        printWindow.print();
+        printWindow.close();
+    }, true);
+}
+
+</script>
+		
+<!-- Center	content nav	-->
+<div class="ful-nav center-nav">
+	<div class="wrapper">
+		<div class="container">
+			
+			<div id="tabs">
+				       <span class='tabButton' id='button_list' onclick="togglediv1()"><a href="#tab1">Overall sales</a></span>
+					   <span class='tabButton' id='button_list' onclick="togglediv2()"><a href="#tab2">Product Sales</a></span>
+					   <span class='tabButton' id='button_list' onclick="togglediv3()"><a href="#tab3">Sales Trends</a></span>
+			</div>
+
+<!--Multi select content view-->
+<div class="multi-select" id="tab1">
+		<div class="title"></div>
+			<div class="selectable-content">
+
+
+
+<!--Daily sales-->
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="day" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/dailysales/'+ hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Daily Sales </p>
+						<div class="bot-icons">
+				 			<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/dailysalespdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/dailysalesexcel/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="" onclick="printExternal()" class="action-btns" ><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+					</div>
+	    </div>
+</div>		
+<!--Monthly sales-->
+<div class="m-select">
+		<div class="checkbox"><input type="checkbox" /></div>
+				<div class="check-content">
+						<div class="months" align='right' ><b></b></div>
+							<p class="sales" onclick="window.open(base_url + 'reports_page/Monthlysales/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Present Month</p>
+								<div class="bot-icons">
+									<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/Monthlysalespdf/'+hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+									<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/Monthlysalesxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+									<a href="" class="action-btns" onclick="printMonth()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+							</div>
+						</div>
+					</div>	
+<!-- previous month sales-->
+<div class="m-select">
+		<div class="checkbox"><input type="checkbox" /></div>
+				<div class="check-content">
+						<div class="Prevmonths" align='right' ><b></b></div>
+							<p class="sales" onclick="window.open(base_url + 'reports_page/Previousmonth/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Previous Month</p>
+							<div class="bot-icons">
+									<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/Previousmonthpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+									<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/Previousmonthxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+									<a href="" class="action-btns" onclick="printpreviousMonth()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+							</div>
+						</div>
+					</div>	
+<!-- previous day sales-->
+<div class="m-select">
+		<div class="checkbox"><input type="checkbox" /></div>
+				<div class="check-content">
+						<div class="prevday" align='right' ><b></b></div>
+							<p class="sales" onclick="window.open(base_url + 'reports_page/Previousday/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Previous Day</p>
+								<div class="bot-icons">
+									<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/Prevdaypdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+									<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/Prevdayxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+									<a href="" class="action-btns" onclick="printpreviousday()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+							</div>
+						</div>
+					</div>
+
+<!-- Present week sales-->
+<div class="m-select">
+		<div class="checkbox"><input type="checkbox" /></div>
+				<div class="check-content">
+						<div class="presweek" align='right' ><b></b></div>
+							<p class="sales" onclick="window.open(base_url + 'reports_page/Presentweek/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Present Week</p>
+								<div class="bot-icons">
+									<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/Presweekpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+									<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/Presweekxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+									<a href="" class="action-btns" onclick="printpresentweek()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+							</div>
+						</div>
+					</div>
+<!-- Last week sales-->
+<div class="m-select">
+		<div class="checkbox"><input type="checkbox" /></div>
+				<div class="check-content">
+						<div class="lastweek" align='right' ><b></b></div>
+							<p class="sales" onclick="window.open(base_url + 'reports_page/Lastweek/' +hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Last Week</p>
+								<div class="bot-icons">
+									<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/Lastweekpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+									<a href="" class="action-btns" onclick="window.open(base_url + 'reports_page/Lastweekxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+									<a href="" class="action-btns" onclick="printlastweek()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+							</div>
+						</div>
+					</div>
+
+
+<!-- Sales by Table No-->
+<div class="m-select">
+		<div class="checkbox"><input type="checkbox" /></div>
+				<div class="check-content">
+						<div class="salestable" align='right' ><b></b></div>
+							<p class="sales" onclick="window.open(base_url + 'reports_page/salesByTable/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Sales by Table No</p>
+								<div class="bot-icons">
+									<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/salesByTablepdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')" ><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+									<a href="" class="action-btns" onclick="window.open(base_url + 'reports_page/salesByTablexls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+									<a href="" class="action-btns" onclick="printDailySalesTab()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+							</div>
+						</div>
+					</div>
+
+
+				</div>					
+			</div>
+		<!--Product Sales Tab-->
+<div class="multi-select" id="tab2" style="display:none">
+		<div class="title"></div>
+			<div class="selectable-content">
+
+
+<!--Daily sales-->
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="itemyest" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/itemwiseSalesYest/'+ hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Itemwise Yesterday</p>
+						<div class="bot-icons">
+							<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/itemwiseSalesYestpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/itemwiseSalesYestxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="" class="action-btns" onclick="printItemwiseSalesYest()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+					</div>
+	    </div>
+</div>
+
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="itemmnth" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/itemwiseSalesMnth/'+ hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Itemwise ThisMonth</p>
+						<div class="bot-icons">
+							<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/itemwiseSalesMnthpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/itemwiseSalesMnthxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="" class="action-btns" onclick="printItemwiseSalesMnth()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+					</div>
+	    </div>
+</div>
+
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="itemweek" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/itemwiseSalesWeek/'+ hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Itemwise ThisWeek</p>
+						<div class="bot-icons">
+							<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/itemwiseSalesWeekpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/itemwiseSalesWeekxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="" class="action-btns" onclick="printItemwiseSalesWeek()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+					</div>
+	    </div>
+</div>
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="sbyest" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/subcategSalesYest/'+ hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Sub category Yesterday</p>
+						<div class="bot-icons">
+							<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/subcategSalesYestpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/subcategSalesYestxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="" class="action-btns" onclick="printSubcategoryYest()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+					</div>
+	    </div>
+</div>
+
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="sbmnth" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/subcategSalesMnth/'+ hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Sub category ThisMonth</p>
+						<div class="bot-icons">
+							<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/subcategSalesMnthpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/subcategSalesMnthxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="" class="action-btns" onclick="printSubcategoryMnth()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+					</div>
+	    </div>
+</div>
+
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="sbweek" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/subcategSalesWeek/'+ hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Sub category ThisWeek</p>
+						<div class="bot-icons">
+							<a href="" class="action-btns1" onclick="window.open(base_url + 'reports_page/subcategSalesWeekpdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/subcategSalesWeekxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="" class="action-btns" onclick="printSubcategoryWeek()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+					</div>
+	    </div>
+</div>
+
+	</div>					
+			</div>
+
+
+<!-- Sales Trends Tab -->
+<div id="tab3" class="multi-select" style="display:none">
+		<div class="title"></div>
+			<div class="selectable-content">
+
+
+<!--Monthly sales-->
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="monthly" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/salestrendsMonthly/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Monthly Sales</p>
+					<div id='viewBillDialog'></div>
+						<div class="bot-icons">
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/salestrendsMonthlypdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/salestrendsMonthlyxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="printMonthlySalesTrends()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+					</div>
+	    </div>
+</div>		
+
+<!--Weekly sales-->
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="weekly" align='right'><b> </b></div>
+				<p class="sales" onclick="window.open(base_url + 'reports_page/salesTrendsWeekly/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Weekly Sales </p>
+					<div id='viewBillDialog'></div>
+						<div class="bot-icons">
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/salesTrendsWeeklypdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/salesTrendsWeeklyxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="printWeeklySalesTrends()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+
+					</div>
+	    </div>
+</div>
+
+<!--Daily sales for last 3 months-->
+<div class="m-select">
+	<div class="checkbox"><input type="checkbox" /></div>
+		<div class="check-content">
+			<div class="dailytrends" align='right'><b> </b></div>
+<p class="sales" onclick="window.open(base_url + 'reports_page/salesTrendsDaily/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')">Daily Sales</p>
+					<div id='viewBillDialog'></div>
+						<div class="bot-icons">
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/salesTrendsDailypdf/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="window.open(base_url + 'reports_page/salesTrendsDailyxls/' + hotel_id, ' ','left=430,width=500,height=500,toolbar=0,resizable=0,scrollbars=yes')"><img src="<?php echo base_url();?>img//xl.png" width="45" height="33" alt="" /></a>
+							<a href="#" class="action-btns" onclick="printDailySalesTrends()"><img src="<?php echo base_url();?>img//print.png" width="45" height="33" alt="" /></a>
+
+					</div>
+	    </div>
+</div>
+
+	</div>
+	</div>
+
+
+		</div>
+	</div>
+</div>
+
+
+
+	<!-- Footer	-->
+<div class="ful-nav ft-nav">
+   <div class="wrapper">
+      <div class="container">
+				<a href="#" class="action-btns"><img src="<?php echo base_url();?>img/pdf.png" width="45" height="33" alt="" /></a>
+				<a href="#" class="action-btns"><img src="<?php echo base_url();?>/img//xl.png" width="45" height="33" alt="" /></a>
+				<a href="#" class="action-btns"><img src="<?php echo base_url();?>/img//print.png" width="45" height="33" alt="" /></a>
+            </div>
+        </div>
+</div>
+
+	<!-- End of Footer	-->
+	</div>
+	</body>
+</html>
